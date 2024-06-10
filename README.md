@@ -112,7 +112,7 @@ Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull re
 
 
 ## Contato
-- Email: seu-email@example.com
+- [Instagram](https://www.instagram.com/brunomello.dev/)
 - [LinkedIn](https://www.linkedin.com/in/sbrunomello)
 
 Desenvolvido com ❤️ por [Mello](https://www.linkedin.com/in/sbrunomello).
