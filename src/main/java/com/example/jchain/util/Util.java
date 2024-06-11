@@ -1,9 +1,15 @@
 package com.example.jchain.util;
 
+import com.example.jchain.employee.service.EmployeeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Util {
+    private static final Logger logger = LoggerFactory.getLogger(Util.class);
+
     public static String applySha256(String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -18,7 +24,7 @@ public class Util {
             }
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            logger.info("Error: {}", e.getMessage());
             return null;
         }
     }

@@ -1,9 +1,5 @@
 package com.example.jchain.employee.controller;
 
-import com.example.jchain.attendance.service.AttendanceService;
-import com.example.jchain.blockchain.model.Block;
-import com.example.jchain.blockchain.model.Transaction;
-import com.example.jchain.blockchain.service.BlockchainService;
 import com.example.jchain.employee.model.Employee;
 import com.example.jchain.employee.model.request.EmployeeRequest;
 import com.example.jchain.employee.service.EmployeeService;
@@ -20,14 +16,24 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @PostMapping()
+    @PostMapping("/create")
     public ResponseEntity<Employee> createEmployee(@RequestBody EmployeeRequest employeeRequest) {
         Employee employee = employeeService.createEmployee(employeeRequest);
         return ResponseEntity.ok(employee);
     }
 
-    @GetMapping()
-    public ResponseEntity<List<Employee>> listEmployees() {
+    @GetMapping("/{id}")
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable String id) {
+        Employee employee = employeeService.getEmployeeById(id);
+        if (employee != null) {
+            return ResponseEntity.ok(employee);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Employee>> getAllEmployees() {
         List<Employee> employees = employeeService.getAllEmployees();
         return ResponseEntity.ok(employees);
     }

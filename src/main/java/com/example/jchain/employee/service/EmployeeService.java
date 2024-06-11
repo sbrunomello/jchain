@@ -5,6 +5,8 @@ import com.example.jchain.employee.model.enums.EmployeeType;
 import com.example.jchain.employee.model.request.EmployeeRequest;
 import com.example.jchain.util.Util;
 import com.example.jchain.employee.model.Employee;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,8 @@ import java.util.List;
 
 @Service
 public class EmployeeService {
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeService.class);
+
 
     @Autowired
     private BlockchainService blockchainService;
@@ -32,6 +36,8 @@ public class EmployeeService {
 
         employee.setType(EmployeeType.CREATE_KEY);
         employee.setTimestamp(timestamp);
+        logger.info("Create employee: {}", employee);
+
         blockchainService.addBlock(employee, id);
         return employee;
     }

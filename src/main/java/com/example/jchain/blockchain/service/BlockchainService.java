@@ -3,12 +3,13 @@ package com.example.jchain.blockchain.service;
 import com.example.jchain.attendance.model.Attendance;
 import com.example.jchain.blockchain.model.Block;
 import com.example.jchain.blockchain.model.Transaction;
-import com.example.jchain.blockchain.model.enums.Type;
 import com.example.jchain.employee.model.Employee;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -18,6 +19,8 @@ import java.util.List;
 
 @Service
 public class BlockchainService {
+    private static final Logger logger = LoggerFactory.getLogger(BlockchainService.class);
+
     @Getter
     private List<Block<?>> chain;
     @Getter
@@ -48,17 +51,18 @@ public class BlockchainService {
         return chain.getLast();
     }
 
-    public void addBlock(Object data, String userId ) {
-        Block<?> newBlock = new Block<>(chain.size(), getLatestBlock().getHash(), data, userId);
+    public <T> void addBlock(T data, String userId) {
+        Block<T> newBlock = new Block<>(chain.size(), getLatestBlock().getHash(), data, userId);
         chain.add(newBlock);
         if (data instanceof Employee) {
             employees.add((Employee) data);
         }
         if (data instanceof Attendance) {
-            transactions.add((Attendance) data);
+            transactions.add((Transaction) data);
         } else if (data instanceof Transaction) {
             transactions.add((Transaction) data);
         }
+        logger.info("Add new Block: {}", newBlock);
         saveChain();
     }
 
@@ -80,7 +84,7 @@ public class BlockchainService {
         try {
             objectMapper.writeValue(new File(FILENAME), chain);
         } catch (IOException e) {
-            System.out.println("Error saving blockchain: " + e.getMessage());
+            logger.error("Error saving blockchain: {}", e.getMessage());
         }
     }
 
@@ -100,9 +104,8 @@ public class BlockchainService {
                 chain = new ArrayList<>();
             }
         } catch (IOException e) {
-            System.out.println("Error loading blockchain: " + e.getMessage());
+            logger.error("Error loading blockchain: {}", e.getMessage());
             chain = new ArrayList<>();
         }
     }
-
 }
