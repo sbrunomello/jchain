@@ -1,3 +1,6 @@
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)<br>
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fsbrunomello%2Fjchain&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=repo+views&edge_flat=true)](https://hits.seeyoufarm.com)
 # jchain - Blockchain Private Network
 
 ## Descrição
@@ -20,7 +23,7 @@ Este projeto é uma blockchain privada desenvolvida em Java 21. O projeto visa s
 - **Listagem de Batidas de Ponto:** Endpoints para listar todas as batidas de ponto por funcionário.
 
 ## Persistência
-A blockchain é persistida provisoriamente em arquivos JSON criptografados para evitar a perda de dados. Esta solução é temporária e será evoluída para um sistema mais descentralizado e robusto.
+A blockchain é persistida provisoriamente em arquivos JSON criptografados para evitar a perda de dados. Esta solução é temporária e será evoluída para um sistema mais descentralizado.
 
 ## Futuras Funcionalidades
 
