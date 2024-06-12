@@ -14,21 +14,21 @@ public class Block<T> {
     private int index;
     private String previousHash;
     private long timestamp;
-    private T data;
+    private Transaction<T> transaction;
     private String hash;
     private String userId;
 
-    public Block(int index, String previousHash, T data, String userId) {
+    public Block(int index, String previousHash, Transaction<T> transaction, String userId) {
         this.index = index;
         this.previousHash = previousHash;
         this.timestamp = Instant.now().toEpochMilli();
-        this.data = data;
+        this.transaction = transaction;
         this.userId = userId;
         this.hash = calculateHash();
     }
 
     public String calculateHash() {
-        String input = index + previousHash + timestamp + data.toString() + userId;
+        String input = index + previousHash + timestamp + transaction.toString() + userId;
         return Util.applySha256(input);
     }
 }

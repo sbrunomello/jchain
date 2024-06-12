@@ -1,21 +1,20 @@
 package com.example.jchain.attendance.service;
 
-import com.example.jchain.attendance.model.enums.AttendanceType;
+import com.example.jchain.attendance.model.AttendanceType;
 import com.example.jchain.blockchain.model.Transaction;
 import com.example.jchain.blockchain.service.BlockchainService;
 import com.example.jchain.employee.service.EmployeeService;
 import com.example.jchain.attendance.model.Attendance;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class AttendanceService {
-    private static final Logger logger = LoggerFactory.getLogger(AttendanceService.class);
 
 
     @Autowired
@@ -27,12 +26,12 @@ public class AttendanceService {
     public boolean registerAttendance(String employeeId, String key, String location) {
         if (employeeService.validateKey(employeeId, key)) {
             Attendance attendance = new Attendance(employeeId, location);
-            attendance.setType(AttendanceType.ATTENDANCE);
+            //attendance.setType(AttendanceType.ATTENDANCE);
             blockchainService.addBlock(attendance, employeeId);
-            logger.info("Attendance registered for employee: {}", employeeId);
+            log.info("Attendance registered for employee: {}", employeeId);
             return true;
         }
-        logger.warn("Invalid key for employee: {}", employeeId);
+        log.warn("Invalid key for employee: {}", employeeId);
         return false;
     }
 

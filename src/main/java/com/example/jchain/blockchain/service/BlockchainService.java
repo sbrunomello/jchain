@@ -4,22 +4,22 @@ import com.example.jchain.attendance.model.Attendance;
 import com.example.jchain.blockchain.model.Block;
 import com.example.jchain.blockchain.model.Transaction;
 import com.example.jchain.employee.model.Employee;
+import com.example.jchain.util.IPFSService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class BlockchainService {
-    private static final Logger logger = LoggerFactory.getLogger(BlockchainService.class);
 
     @Getter
     private List<Block<?>> chain;
@@ -27,42 +27,45 @@ public class BlockchainService {
     private final List<Employee> employees;
     @Getter
     private final List<Transaction> transactions;
-    private static final String FILENAME = "src/main/resources/blockchain_data/blockchain.json";
     private final ObjectMapper objectMapper;
 
-    public BlockchainService() {
+    private final IPFSService ipfsService;
+
+    public BlockchainService(IPFSService ipfsService) {
+        this.ipfsService = ipfsService;
         this.chain = new ArrayList<>();
         this.employees = new ArrayList<>();
         this.transactions = new ArrayList<>();
         this.objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        loadChain();
+//        loadChain();
         if (chain.isEmpty()) {
             chain.add(createGenesisBlock());
             saveChain();
         }
     }
 
-    private Block<String> createGenesisBlock() {
-        return new Block<>(0, "0", "Genesis Block", "0");
+    private Block createGenesisBlock() {
+        long timestamp = Instant.now().toEpochMilli();
+        return new Block<>(0, "0", new Transaction(timestamp, "Genesis Block", ""), "0");
     }
 
     public Block<?> getLatestBlock() {
         return chain.getLast();
     }
 
-    public <T> void addBlock(T data, String userId) {
+    public <T> void addBlock(Transaction<T> data, String userId) {
         Block<T> newBlock = new Block<>(chain.size(), getLatestBlock().getHash(), data, userId);
         chain.add(newBlock);
         if (data instanceof Employee) {
             employees.add((Employee) data);
         }
         if (data instanceof Attendance) {
-            transactions.add((Transaction) data);
-        } else if (data instanceof Transaction) {
-            transactions.add((Transaction) data);
+            transactions.add(data);
+        } else if (data != null) {
+            transactions.add(data);
         }
-        logger.info("Add new Block: {}", newBlock);
+        log.info("Add new Block: {}", newBlock);
         saveChain();
     }
 
@@ -80,32 +83,47 @@ public class BlockchainService {
         return true;
     }
 
-    private void saveChain() {
+    public void saveChain() {
         try {
-            objectMapper.writeValue(new File(FILENAME), chain);
+            String blockHash = ipfsService.addFile(chain.toString().getBytes());
+
+            //BlockchainMessage message = new BlockchainMessage(MessageType.ADD_BLOCK, blockHash);
+
+           // blockchainNodeService.broadcastMessage(message);
+            log.info("hash: {}", blockHash);
+
         } catch (IOException e) {
-            logger.error("Error saving blockchain: {}", e.getMessage());
+            log.error("Error saving blockchain: {}", e.getMessage());
         }
     }
 
-    private void loadChain() {
+    public String loadChain(String hash) {
         try {
-            File file = new File(FILENAME);
-            if (file.exists()) {
-                chain = objectMapper.readValue(file, new TypeReference<List<Block<?>>>() {});
+            String byteIPFS = ipfsService.getFile(hash);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = objectMapper.writeValueAsString(byteIPFS);
+
+            if (!json.isEmpty()) {
+                chain = objectMapper.readValue(json, new TypeReference<>() {});
                 for (Block<?> block : chain) {
-                    if (block.getData() instanceof Employee) {
-                        employees.add((Employee) block.getData());
-                    } else if (block.getData() instanceof Transaction) {
-                        transactions.add((Transaction) block.getData());
+                    if (block.getTransaction() instanceof Employee) {
+                        employees.add((Employee) block.getTransaction());
+                    } else if (block.getTransaction() != null) {
+                        transactions.add(block.getTransaction());
                     }
                 }
+
+                //BlockchainMessage message = new BlockchainMessage(MessageType.SYNC_BLOCKCHAIN, json);
+                //blockchainNodeService.broadcastMessage(message);
+
+                return json;
             } else {
                 chain = new ArrayList<>();
             }
         } catch (IOException e) {
-            logger.error("Error loading blockchain: {}", e.getMessage());
+            log.error("Error sync blockchain: {}", e.getMessage());
             chain = new ArrayList<>();
         }
+        return hash;
     }
 }
