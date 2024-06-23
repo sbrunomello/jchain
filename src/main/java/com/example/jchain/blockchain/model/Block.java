@@ -2,33 +2,30 @@ package com.example.jchain.blockchain.model;
 
 import com.example.jchain.util.Util;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
-@Data
+@lombok.Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Block<T> {
     private int index;
     private String previousHash;
     private long timestamp;
-    private Transaction<T> transaction;
+    private Data<T> data;
     private String hash;
-    private String userId;
 
-    public Block(int index, String previousHash, Transaction<T> transaction, String userId) {
+    public Block(int index, String previousHash, Data<T> data) {
         this.index = index;
         this.previousHash = previousHash;
         this.timestamp = Instant.now().toEpochMilli();
-        this.transaction = transaction;
-        this.userId = userId;
+        this.data = data;
         this.hash = calculateHash();
     }
 
     public String calculateHash() {
-        String input = index + previousHash + timestamp + transaction.toString() + userId;
+        String input = index + previousHash + timestamp + data.toString();
         return Util.applySha256(input);
     }
 }

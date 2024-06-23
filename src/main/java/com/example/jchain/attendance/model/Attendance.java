@@ -1,7 +1,6 @@
 package com.example.jchain.attendance.model;
 
-import com.example.jchain.blockchain.model.Transaction;
-import lombok.Data;
+import com.example.jchain.blockchain.model.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
@@ -9,9 +8,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
+@lombok.Data
 @NoArgsConstructor
-public class Attendance extends Transaction {
+public class Attendance extends Data {
     private String employeeId;
     private String dateTime;
     private String location;

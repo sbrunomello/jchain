@@ -1,7 +1,6 @@
 package com.example.jchain.attendance.service;
 
-import com.example.jchain.attendance.model.AttendanceType;
-import com.example.jchain.blockchain.model.Transaction;
+import com.example.jchain.blockchain.model.Data;
 import com.example.jchain.blockchain.service.BlockchainService;
 import com.example.jchain.employee.service.EmployeeService;
 import com.example.jchain.attendance.model.Attendance;
@@ -27,7 +26,7 @@ public class AttendanceService {
         if (employeeService.validateKey(employeeId, key)) {
             Attendance attendance = new Attendance(employeeId, location);
             //attendance.setType(AttendanceType.ATTENDANCE);
-            blockchainService.addBlock(attendance, employeeId);
+            blockchainService.addBlock(attendance);
             log.info("Attendance registered for employee: {}", employeeId);
             return true;
         }
@@ -35,8 +34,8 @@ public class AttendanceService {
         return false;
     }
 
-    public List<Transaction> getAttendanceByEmployee(String employeeId) {
-        return blockchainService.getTransactions().stream()
+    public List<Data> getAttendanceByEmployee(String employeeId) {
+        return blockchainService.getData().stream()
                 .filter(transaction -> transaction instanceof Attendance)
                 .filter(transaction -> ((Attendance) transaction).getEmployeeId().equals(employeeId))
                 .collect(Collectors.toList());

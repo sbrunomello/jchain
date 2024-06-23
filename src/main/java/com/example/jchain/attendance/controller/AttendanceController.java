@@ -1,7 +1,8 @@
 package com.example.jchain.attendance.controller;
 
-import com.example.jchain.blockchain.model.Transaction;
+import com.example.jchain.blockchain.model.Data;
 import com.example.jchain.attendance.service.AttendanceService;
+import com.example.jchain.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/attendance")
-public class AttendanceController {
+@RequestMapping("/attendance")
+public class AttendanceController extends BaseController {
 
     @Autowired
     private AttendanceService attendanceService;
@@ -29,8 +30,8 @@ public class AttendanceController {
     }
 
     @GetMapping("/{employeeId}")
-    public ResponseEntity<List<Transaction>> listAttendanceByEmployee(@PathVariable String employeeId) {
-        List<Transaction> attendance = attendanceService.getAttendanceByEmployee(employeeId);
+    public ResponseEntity<List<Data>> listAttendanceByEmployee(@PathVariable String employeeId) {
+        List<Data> attendance = attendanceService.getAttendanceByEmployee(employeeId);
         return ResponseEntity.ok(attendance);
     }
 }

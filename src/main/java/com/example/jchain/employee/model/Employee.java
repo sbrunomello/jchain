@@ -1,14 +1,14 @@
 package com.example.jchain.employee.model;
 
-import com.example.jchain.blockchain.model.Transaction;
+import com.example.jchain.blockchain.model.Data;
 import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
+@lombok.Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class Employee extends Transaction {
+public class Employee extends Data {
     private String id;
     private String name;
     private String key;

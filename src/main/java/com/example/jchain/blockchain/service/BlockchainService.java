@@ -2,7 +2,7 @@ package com.example.jchain.blockchain.service;
 
 import com.example.jchain.attendance.model.Attendance;
 import com.example.jchain.blockchain.model.Block;
-import com.example.jchain.blockchain.model.Transaction;
+import com.example.jchain.blockchain.model.Data;
 import com.example.jchain.employee.model.Employee;
 import com.example.jchain.util.IPFSService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -26,7 +26,7 @@ public class BlockchainService {
     @Getter
     private final List<Employee> employees;
     @Getter
-    private final List<Transaction> transactions;
+    private final List<Data> data;
     private final ObjectMapper objectMapper;
 
     private final IPFSService ipfsService;
@@ -35,7 +35,7 @@ public class BlockchainService {
         this.ipfsService = ipfsService;
         this.chain = new ArrayList<>();
         this.employees = new ArrayList<>();
-        this.transactions = new ArrayList<>();
+        this.data = new ArrayList<>();
         this.objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 //        loadChain();
@@ -47,23 +47,23 @@ public class BlockchainService {
 
     private Block createGenesisBlock() {
         long timestamp = Instant.now().toEpochMilli();
-        return new Block<>(0, "0", new Transaction(timestamp, "Genesis Block", ""), "0");
+        return new Block<>(0, "0", new Data(timestamp, "Genesis Block", ""));
     }
 
     public Block<?> getLatestBlock() {
         return chain.getLast();
     }
 
-    public <T> void addBlock(Transaction<T> data, String userId) {
-        Block<T> newBlock = new Block<>(chain.size(), getLatestBlock().getHash(), data, userId);
+    public <T> void addBlock(Data<T> data) {
+        Block<T> newBlock = new Block<>(chain.size(), getLatestBlock().getHash(), data);
         chain.add(newBlock);
         if (data instanceof Employee) {
             employees.add((Employee) data);
         }
         if (data instanceof Attendance) {
-            transactions.add(data);
+            this.data.add(data);
         } else if (data != null) {
-            transactions.add(data);
+            this.data.add(data);
         }
         log.info("Add new Block: {}", newBlock);
         saveChain();
@@ -106,10 +106,10 @@ public class BlockchainService {
             if (!json.isEmpty()) {
                 chain = objectMapper.readValue(json, new TypeReference<>() {});
                 for (Block<?> block : chain) {
-                    if (block.getTransaction() instanceof Employee) {
-                        employees.add((Employee) block.getTransaction());
-                    } else if (block.getTransaction() != null) {
-                        transactions.add(block.getTransaction());
+                    if (block.getData() instanceof Employee) {
+                        employees.add((Employee) block.getData());
+                    } else if (block.getData() != null) {
+                        data.add(block.getData());
                     }
                 }
 

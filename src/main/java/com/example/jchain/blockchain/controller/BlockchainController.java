@@ -6,6 +6,7 @@ import com.example.jchain.blockchain.model.node.MessageType;
 import com.example.jchain.blockchain.model.node.Peer;
 import com.example.jchain.blockchain.service.BlockchainService;
 import com.example.jchain.blockchain.service.BlockchainNodeService;
+import com.example.jchain.controller.BaseController;
 import com.example.jchain.util.IPFSService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.ipfs.multibase.Base58;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/blockchain")
-public class BlockchainController {
+public class BlockchainController extends BaseController {
 
     private final BlockchainService blockchainService;
     private final BlockchainNodeService blockchainNodeService;

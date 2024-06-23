@@ -37,13 +37,20 @@ public class EmployeeService {
         employee.setTimestamp(timestamp);
         log.info("Create employee: {}", employee);
 
-        blockchainService.addBlock(employee, id);
+        blockchainService.addBlock(employee);
         return employee;
     }
 
     public Employee getEmployeeById(String id) {
         return blockchainService.getEmployees().stream()
                 .filter(employee -> employee.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public Employee getEmployeeByKey(String key) {
+        return blockchainService.getEmployees().stream()
+                .filter(employee -> employee.getKey().equals(key))
                 .findFirst()
                 .orElse(null);
     }

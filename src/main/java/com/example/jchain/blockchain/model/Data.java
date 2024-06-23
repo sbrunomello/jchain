@@ -1,15 +1,14 @@
 package com.example.jchain.blockchain.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+@lombok.Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Transaction<T> {
+public class Data<T> {
     private long timestamp;
     private T data;
-    private String txHash;
+    private String owner;
 }
 
