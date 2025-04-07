@@ -1,122 +1,100 @@
-![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
-![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)<br>
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fsbrunomello%2Fjchain&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=repo+views&edge_flat=true)](https://hits.seeyoufarm.com)
-# jchain - Blockchain Private Network
+# jchain – Blockchain Private Network
 
-## Descrição
+A prototype private blockchain system built with Java 21 and Spring Boot. This project was created as an experimental environment to explore blockchain technology and its potential applications in business contexts.
 
-Este projeto é uma blockchain privada desenvolvida em Java 21. O projeto visa ser um ambiente de prototipagem para explorar a tecnologia blockchain e suas potenciais aplicações em cenários empresariais.
+## 🚀 Current Features
 
-## Funcionalidades Atuais
+### 1. Employee Registration
+- **Create Employees**: Register new employees with attributes such as name, email, department, position, and joining date.
+- **Unique Key**: Each employee receives a unique key generated using a cryptographic hash based on their ID and creation timestamp.
 
-### 1. Registro de Funcionários
-- **Criação de Funcionários:** Permite a criação de novos funcionários com atributos detalhados como nome, email, departamento, posição e data de admissão.
-- **Chave Única:** Cada funcionário recebe uma chave única gerada usando um hash criptográfico baseado no ID e no timestamp de criação.
+### 2. Attendance Tracking
+- **Check-in API**: Employees can record their check-ins using a REST API.
+- **Key Validation**: The employee key is validated to ensure authenticity.
+- **Timestamped Records**: Each entry includes date and time of attendance.
 
-### 2. Registro de Batidas de Ponto
-- **Registro de Ponto:** Funcionários podem registrar suas batidas de ponto através de uma API REST.
-- **Validação de Chave:** A chave do funcionário é validada para garantir a autenticidade do registro.
-- **Data e Hora:** Cada registro de ponto inclui a data e a hora da batida.
+### 3. Blockchain Visualization
+- **Block View**: API endpoints to visualize all blocks in the blockchain.
+- **Attendance History**: List all check-ins by employee key.
 
-### 3. Visualização da Blockchain
-- **Visualização dos Blocos:** Endpoints para visualizar todos os blocos na blockchain.
-- **Listagem de Batidas de Ponto:** Endpoints para listar todas as batidas de ponto por funcionário.
+## 🧱 Data Persistence
 
-## Persistência
-A blockchain é persistida provisoriamente em arquivos JSON criptografados para evitar a perda de dados. Esta solução é temporária e será evoluída para um sistema mais descentralizado.
+The blockchain data is temporarily persisted in encrypted JSON files to prevent data loss. This approach is planned to evolve into a more decentralized and distributed system in future iterations.
 
-## Futuras Funcionalidades
+## 🔮 Upcoming Features
 
-### Gestão da Cadeia de Suprimentos
-- **Rastreamento de Produtos:** Monitoramento de produtos ao longo da cadeia de suprimentos.
+- **Supply Chain Management** – Product tracking throughout the entire supply chain.  
+- **Document Management** – Secure storage and validation of documents.  
+- **Voting Systems** – Implementation of a transparent and secure digital voting system.  
+- **Smart Contracts** – Automation of legal agreements and business rules.  
+- **Identity Management** – Secure handling of digital identities.  
+- **Asset Monitoring** – Real-time tracking of physical and digital assets.
 
-### Gerenciamento de Documentos
-- **Armazenamento Seguro:** Armazenamento e validação segura de documentos.
+## 🛠 Technologies Used
 
-### Sistemas de Votação
-- **Votação Digital:** Implementação de um sistema seguro e transparente de votação digital.
+- Java 21  
+- Spring Boot  
+- Lombok  
+- Jackson  
+- Postman (API testing)
 
-### Contratos Inteligentes
-- **Automatização:** Automatização de processos e acordos legais.
+## ▶️ How to Run
 
-### Gestão de Identidades
-- **Identidades Digitais:** Gestão segura de identidades digitais.
+### Requirements
+- Java 21
+- Maven
 
-### Monitoramento de Ativos
-- **Rastreamento de Ativos:** Monitoramento de ativos físicos e digitais.
+### Steps
+```bash
+git clone https://github.com/sbrunomello/jchain.git
+cd jchain
+mvn spring-boot:run
+```
 
-## Tecnologias Utilizadas
+## 📡 Available Endpoints
 
-- **Java 21**
-- **Spring Boot**
-- **Lombok**
-- **Jackson**
-- **Postman (para testes de API)**
+### ➕ Create Employee
+```http
+POST /api/employees
+Content-Type: application/json
 
-## Como Executar o Projeto
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "department": "IT",
+  "position": "Developer",
+  "joiningDate": "2023-06-01"
+}
+```
 
-### Pré-requisitos
-- **Java 21**
-- **Maven**
+### 🕒 Register Attendance
+```http
+POST /api/attendances
+Content-Type: application/json
 
-### Passos
+{
+  "employeeKey": "employee-unique-key",
+  "attendanceTime": "2024-06-09T08:00:00"
+}
+```
 
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/sbrunomello/jchain.git
+### 📋 List Employee Attendances
+```http
+GET /api/attendances/{employeeKey}
+```
 
-2. Navegue até o diretório do projeto:
-   ```bash
-   cd jchain
+### 🔗 View Blockchain
+```http
+GET /api/blockchain
+```
 
-3. Compile e execute o projeto:
-   ```bash
-   mvn spring-boot:run
+## 🤝 Contributing
 
+Contributions are welcome! Feel free to open issues or submit pull requests.
 
-## Endpoints Disponíveis
-**Criar Funcionario:**
+## 📬 Contact
 
-    POST /api/employees
-    Content-Type: application/json
+- [Instagram](https://www.instagram.com/)
+- [LinkedIn](https://www.linkedin.com/)
 
-    {
-    "name": "John Doe",
-    "email": "john.doe@example.com",
-    "department": "TI",
-    "position": "Developer",
-    "joiningDate": "2023-06-01"
-    }
-
-**Registrar Batida:**
-
-    POST /api/attendances
-    Content-Type: application/json
-
-    {
-    "employeeKey": "employee-unique-key",
-    "attendanceTime": "2024-06-09T08:00:00"
-    }
-
-Listar batidas:
-
-    GET /api/attendances/{employeeKey}
-
-Visualizar blockchain:
-
-    GET /api/blockchain
-
-
-
-
-## Contribuição
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
-
-
-
-## Contato
-- [Instagram](https://www.instagram.com/brunomello.dev/)
-- [LinkedIn](https://www.linkedin.com/in/sbrunomello)
-
-Desenvolvido com ❤️ por [Mello](https://www.linkedin.com/in/sbrunomello).
-
+Developed with ❤️ by Mello.
